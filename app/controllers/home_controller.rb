@@ -28,4 +28,17 @@ class HomeController < ApplicationController
     # Postprocessing --> Make sure meta page is not nil (breaks view)
     @meta['page'] ||= 1
   end
+  def show
+      video_service = VideoService.new
+      video_id = params[:id].to_i
+
+      begin
+        # Fetch the video details by its ID
+        @video = video_service.get_video_by_id(video_id)
+
+      rescue StandardError => e
+        flash[:alert] = "An error occurred: #{e.message}"
+        redirect_to root_path
+      end
+    end  
 end
