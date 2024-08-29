@@ -19,6 +19,9 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 gem "bootsnap", require: false
 gem 'httparty'
+gem 'mutex_m'
+gem 'webrick'
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
