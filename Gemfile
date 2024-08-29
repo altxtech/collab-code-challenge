@@ -21,6 +21,7 @@ gem "bootsnap", require: false
 gem 'httparty'
 gem 'mutex_m'
 gem 'webrick'
+gem 'kaminari'
 
 
 group :development, :test do

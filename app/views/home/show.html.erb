@@ -1,0 +1,59 @@
+<div class="container mt-4">
+  <!-- Video Thumbnail -->
+  <div class="row">
+    <div class="col-12">
+      <img src="<%= @video['thumbnail_url'] %>" class="img-fluid w-100" alt="<%= @video['title'] %>">
+    </div>
+  </div>
+
+  <!-- Title and Video Stats -->
+  <div class="row mt-3 align-items-center">
+    <div class="col-6">
+      <p class="h4"><%= @video['title'] %></p>
+    </div>
+    <div class="col-md-2">
+      <p>Views: <%= number_with_delimiter(@video['views']) %></p>
+    </div>
+    <div class="col-md-2">
+      <p>Likes: <%= number_with_delimiter(@video['likes']) %></p>
+    </div>
+    <div class="col-md-2">
+      <p>Comments: <%= number_with_delimiter(@video['comments']) %></p>
+    </div>
+  </div>
+
+  <!-- Description with "View More" -->
+  <div class="row mt-3">
+    <div class="col-12">
+      <div id="description-preview" class="mb-3">
+        <%= truncate(@video['description'], length: 100) %>
+        <a href="#" id="view-more">View More</a>
+      </div>
+      <div id="full-description" class="d-none">
+        <%= @video['description'] %>
+        <a href="#" id="view-less">View Less</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const viewMore = document.getElementById('view-more');
+    const viewLess = document.getElementById('view-less');
+    const descriptionPreview = document.getElementById('description-preview');
+    const fullDescription = document.getElementById('full-description');
+
+    viewMore.addEventListener('click', function(e) {
+      e.preventDefault();
+      descriptionPreview.classList.add('d-none');
+      fullDescription.classList.remove('d-none');
+    });
+
+    viewLess.addEventListener('click', function(e) {
+      e.preventDefault();
+      fullDescription.classList.add('d-none');
+      descriptionPreview.classList.remove('d-none');
+    });
+  });
+</script>
