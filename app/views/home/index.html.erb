@@ -1,25 +1,20 @@
-<h1>Home#index</h1>
-<% if @videos.any? %>
-  <div class="videos-list">
-    <% @videos.each do |video| %>
-      <div class="video-item">
-        <img src="<%= video['thumbnail_url'] %>" alt="<%= video['title'] %>">
-        <h2><%= video['title'] %></h2>
-        <p><%= video['description'] %></p>
-        <p>Views: <%= number_with_delimiter(video['views']) %></p>
-      </div>
-    <% end %>
-  </div>
 
-  <%# Pagination links %>
-  <% if @meta %>
-    <div class="pagination">
-      <% if @meta['page'] > 1 %>
-        <%= link_to 'Previous Page', root_path(page: @meta['page'] - 1) %>
+<% if @videos.any? %>
+  <div class="container">
+    <div class="row">
+      <% @videos.each do |video| %>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <img src="<%= video['thumbnail_url'] %>" class="card-img-top" alt="<%= video['title'] %>">
+            <div class="card-body">
+              <h5 class="card-title"><%= video['title'] %></h5>
+              <p class="card-text"><small class="text-muted">Views: <%= number_with_delimiter(video['views']) %></small></p>
+            </div>
+          </div>
+        </div>
       <% end %>
-      <%= link_to 'Next Page', root_path(page: @meta['page'] + 1) %>
     </div>
-  <% end %>
+  </div>
 <% else %>
   <p>No videos available.</p>
 <% end %>
