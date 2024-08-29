@@ -10,7 +10,7 @@
           <%= link_to 'Videos', root_path, class:"nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Playlists', playlists_path, class:"nav-link" %>
+          <a href="#" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#playlistsOffcanvas" onclick="loadPlaylists()">Playlists</a>
         </li>
       </ul>
       <form class="d-flex" role="search" action="<%= root_path %>" method="get">
@@ -20,3 +20,13 @@
     </div>
   </div>
 </nav>
+
+<script>
+  function loadPlaylists() {
+    fetch('/playlists')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('playlists-content').innerHTML = html;
+      });
+  }
+</script>

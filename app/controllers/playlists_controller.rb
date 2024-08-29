@@ -4,6 +4,13 @@ class PlaylistsController < ApplicationController
   # GET /playlists or /playlists.json
   def index
     @playlists = Playlist.all
+
+    if params[:context] == 'add_to_playlist' && params[:video_id].present?
+      @video_id = params[:video_id]
+      render partial: 'playlists/add_to_playlist'
+    else
+      render partial: 'playlists/list_playlists'
+    end
   end
 
   # GET /playlists/1 or /playlists/1.json

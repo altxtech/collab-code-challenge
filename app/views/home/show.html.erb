@@ -22,6 +22,15 @@
     </div>
   </div>
 
+  <!-- Save to Playlist Button -->
+  <div class="row mt-3">
+    <div class="col-12">
+      <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#playlistsOffcanvas" onclick="loadPlaylistsForVideo(<%= @video['id'] %>)">
+        Save to Playlist
+      </button>
+    </div>
+  </div>
+
   <!-- Description with "View More" -->
   <div class="row mt-3">
     <div class="col-12">
@@ -38,6 +47,14 @@
 </div>
 
 <script>
+  function loadPlaylistsForVideo(videoId) {
+    fetch('/playlists?context=add_to_playlist&video_id=' + videoId)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('playlists-content').innerHTML = html;
+      });
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     const viewMore = document.getElementById('view-more');
     const viewLess = document.getElementById('view-less');
