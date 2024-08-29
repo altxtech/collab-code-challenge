@@ -2,7 +2,10 @@
   <!-- Video Thumbnail -->
   <div class="row">
     <div class="col-12">
-      <img src="<%= @video['thumbnail_url'] %>" class="img-fluid w-100" alt="<%= @video['title'] %>">
+      <!-- YouTube Video Embed with larger size -->
+      <div class="embed-responsive embed-responsive-16by9" style="height: 500px;">
+        <iframe class="embed-responsive-item w-100 h-100" src="https://www.youtube.com/embed/<%= @video['video_id'] %>" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 
