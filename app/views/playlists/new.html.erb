@@ -1,9 +1,21 @@
-<h1>New playlist</h1>
-
-<%= render "form", playlist: @playlist %>
-
-<br>
-
-<div>
-  <%= link_to "Back to home", root_path %>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Create a New Playlist</h4>
+        </div>
+        <div class="card-body">
+          <!-- Render the form partial -->
+          <%= form_with(model: @playlist, local: true) do |form| %>
+            <%= render "form_fields", form: form %>
+            <div class="card-footer text-right">
+              <%= link_to "Back to home", root_path, class: "btn btn-secondary mr-2" %>
+              <%= form.submit "Create Playlist", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
