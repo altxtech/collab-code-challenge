@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :playlist_items, only: [:create]
   resources :playlists, only: [:index, :show, :new, :create, :edit] do
+    resources :playlist_items, only: [:create, :destroy]
     member do
       patch :update_title
       delete :remove_videos

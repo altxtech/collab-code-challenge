@@ -41,84 +41,88 @@
 </div>
 
 <%= form_with url: remove_videos_playlist_path(@playlist), method: :delete, id: 'remove-videos-form' do %>
+  <% # This field will now hold the array of video IDs %>
   <input type="hidden" name="video_ids[]" id="selected-video-ids">
 <% end %>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const contextElement = document.getElementById('playlist-show');
-    const titleElement = document.getElementById('playlist-title');
-    const titleInputElement = document.getElementById('playlist-title-input');
-    const editButton = document.getElementById('edit-button');
-    const removeButton = document.getElementById('remove-button');
-    const confirmButton = document.getElementById('confirm-button');
-    const cancelButton = document.getElementById('cancel-button');
-    const videoCheckboxes = document.querySelectorAll('.video-checkbox');
-    const removeForm = document.getElementById('remove-videos-form');
-    const selectedVideoIdsInput = document.getElementById('selected-video-ids');
+document.addEventListener('DOMContentLoaded', function() {
+  const contextElement = document.getElementById('playlist-show');
+  const titleElement = document.getElementById('playlist-title');
+  const titleInputElement = document.getElementById('playlist-title-input');
+  const editButton = document.getElementById('edit-button');
+  const removeButton = document.getElementById('remove-button');
+  const confirmButton = document.getElementById('confirm-button');
+  const cancelButton = document.getElementById('cancel-button');
+  const videoCheckboxes = document.querySelectorAll('.video-checkbox');
+  const removeForm = document.getElementById('remove-videos-form');
+  const selectedVideoIdsInput = document.getElementById('selected-video-ids');
 
-    function changeContext(context) {
-      contextElement.setAttribute('data-context', context);
+  function changeContext(context) {
+    contextElement.setAttribute('data-context', context);
 
-      switch (context) {
-        case 'edit':
-          titleElement.setAttribute('contenteditable', 'true');
-          titleElement.focus();
-          editButton.classList.add('d-none');
-          removeButton.classList.add('d-none');
-          confirmButton.classList.remove('d-none');
-          cancelButton.classList.remove('d-none');
-          break;
-        case 'remove_from_playlist':
-          videoCheckboxes.forEach(cb => cb.classList.remove('d-none'));
-          editButton.classList.add('d-none');
-          removeButton.classList.add('d-none');
-          confirmButton.classList.remove('d-none');
-          cancelButton.classList.remove('d-none');
-          break;
-        default: // 'normal'
-          titleElement.setAttribute('contenteditable', 'false');
-          videoCheckboxes.forEach(cb => cb.classList.add('d-none'));
-          editButton.classList.remove('d-none');
-          removeButton.classList.remove('d-none');
-          confirmButton.classList.add('d-none');
-          cancelButton.classList.add('d-none');
-          break;
-      }
+    switch (context) {
+      case 'edit':
+        titleElement.setAttribute('contenteditable', 'true');
+        titleElement.focus();
+        editButton.classList.add('d-none');
+        removeButton.classList.add('d-none');
+        confirmButton.classList.remove('d-none');
+        cancelButton.classList.remove('d-none');
+        break;
+      case 'remove_from_playlist':
+        videoCheckboxes.forEach(cb => cb.classList.remove('d-none'));
+        editButton.classList.add('d-none');
+        removeButton.classList.add('d-none');
+        confirmButton.classList.remove('d-none');
+        cancelButton.classList.remove('d-none');
+        break;
+      default: // 'normal'
+        titleElement.setAttribute('contenteditable', 'false');
+        videoCheckboxes.forEach(cb => {
+          cb.classList.add('d-none');
+          cb.checked = false; // Reset checkboxes when switching context
+        });
+        editButton.classList.remove('d-none');
+        removeButton.classList.remove('d-none');
+        confirmButton.classList.add('d-none');
+        cancelButton.classList.add('d-none');
+        break;
     }
+  }
 
-    editButton.addEventListener('click', function() {
-      changeContext('edit');
-    });
-
-    removeButton.addEventListener('click', function() {
-      changeContext('remove_from_playlist');
-    });
-
-    confirmButton.addEventListener('click', function() {
-      if (contextElement.getAttribute('data-context') === 'edit') {
-        titleInputElement.value = titleElement.innerText;
-        document.getElementById('edit-playlist-form').submit();
-      } else if (contextElement.getAttribute('data-context') === 'remove_from_playlist') {
-        const selectedVideoIds = Array.from(videoCheckboxes)
-          .filter(cb => cb.checked)
-          .map(cb => cb.value);
-
-        selectedVideoIdsInput.value = selectedVideoIds.join(',');
-        removeForm.submit();
-      }
-    });
-
-    cancelButton.addEventListener('click', function() {
-      changeContext('normal');
-    });
-
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        changeContext('normal');
-      } else if (event.key === 'Enter' && contextElement.getAttribute('data-context') === 'edit') {
-        confirmButton.click();
-      }
-    });
+  editButton.addEventListener('click', function() {
+    changeContext('edit');
   });
+
+  removeButton.addEventListener('click', function() {
+    changeContext('remove_from_playlist');
+  });
+
+  confirmButton.addEventListener('click', function() {
+    if (contextElement.getAttribute('data-context') === 'edit') {
+      titleInputElement.value = titleElement.innerText;
+      document.getElementById('edit-playlist-form').submit();
+    } else if (contextElement.getAttribute('data-context') === 'remove_from_playlist') {
+      const selectedVideoIds = Array.from(videoCheckboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+
+      selectedVideoIdsInput.value = selectedVideoIds; // Assign the array directly
+      removeForm.submit();
+    }
+  });
+
+  cancelButton.addEventListener('click', function() {
+    changeContext('normal');
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      changeContext('normal');
+    } else if (event.key === 'Enter' && contextElement.getAttribute('data-context') === 'edit') {
+      confirmButton.click();
+    }
+  });
+});
 </script>
