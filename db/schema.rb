@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_29_011902) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_29_200616) do
   create_table "playlist_items", force: :cascade do |t|
     t.integer "playlist_id", null: false
     t.string "video_id"
@@ -23,6 +23,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_29_011902) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "videos", force: :cascade do |t|
+    t.string "video_id"
+    t.string "title"
+    t.integer "views"
+    t.integer "likes"
+    t.integer "comments"
+    t.text "description"
+    t.string "thumbnail_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["video_id"], name: "index_videos_on_video_id", unique: true
   end
 
   add_foreign_key "playlist_items", "playlists"
