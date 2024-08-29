@@ -1,10 +1,124 @@
-<p style="color: green"><%= notice %></p>
+<div class="container mt-4" id="playlist-show" data-context="normal">
+  <!-- Editable Title -->
+  <div class="row">
+    <div class="col-12">
+      <h1 id="playlist-title" contenteditable="false"><%= @playlist.name %></h1>
+      <%= form_with model: @playlist, url: update_title_playlist_path(@playlist), method: :patch, id: 'edit-playlist-form', local: true do %>
+        <input type="hidden" id="playlist-title-input" name="playlist[name]" value="<%= @playlist.name %>">
+      <% end %>
+    </div>
+  </div>
 
-<%= render @playlist %>
+  <!-- Action Buttons -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <button id="edit-button" class="btn btn-primary">Edit</button>
+      <button id="remove-button" class="btn btn-danger">Remove Videos</button>
+      <button id="confirm-button" class="btn btn-success d-none">Confirm Changes</button>
+      <button id="cancel-button" class="btn btn-secondary d-none">Cancel</button>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this playlist", edit_playlist_path(@playlist) %> |
-  <%= link_to "Back to playlists", playlists_path %>
-
-  <%= button_to "Destroy this playlist", @playlist, method: :delete %>
+  <!-- Videos List -->
+  <div class="row">
+    <% @videos.each do |video| %>
+      <div class="col-md-3 mb-4">
+        <div class="video-container">
+          <%= check_box_tag 'video_ids[]', video['id'], false, class: 'video-checkbox d-none' %>
+          <%= link_to video_path(video['id']), class: "text-decoration-none text-dark" do %>
+            <div class="card h-100">
+              <img src="<%= video['thumbnail_url'] %>" class="card-img-top" alt="<%= video['title'] %>">
+              <div class="card-body p-2">
+                <h6 class="card-title"><%= video['title'] %></h6>
+                <p class="card-text"><small class="text-muted">Views: <%= number_with_delimiter(video['views']) %></small></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<%= form_with url: remove_videos_playlist_path(@playlist), method: :delete, id: 'remove-videos-form' do %>
+  <input type="hidden" name="video_ids[]" id="selected-video-ids">
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const contextElement = document.getElementById('playlist-show');
+    const titleElement = document.getElementById('playlist-title');
+    const titleInputElement = document.getElementById('playlist-title-input');
+    const editButton = document.getElementById('edit-button');
+    const removeButton = document.getElementById('remove-button');
+    const confirmButton = document.getElementById('confirm-button');
+    const cancelButton = document.getElementById('cancel-button');
+    const videoCheckboxes = document.querySelectorAll('.video-checkbox');
+    const removeForm = document.getElementById('remove-videos-form');
+    const selectedVideoIdsInput = document.getElementById('selected-video-ids');
+
+    function changeContext(context) {
+      contextElement.setAttribute('data-context', context);
+
+      switch (context) {
+        case 'edit':
+          titleElement.setAttribute('contenteditable', 'true');
+          titleElement.focus();
+          editButton.classList.add('d-none');
+          removeButton.classList.add('d-none');
+          confirmButton.classList.remove('d-none');
+          cancelButton.classList.remove('d-none');
+          break;
+        case 'remove_from_playlist':
+          videoCheckboxes.forEach(cb => cb.classList.remove('d-none'));
+          editButton.classList.add('d-none');
+          removeButton.classList.add('d-none');
+          confirmButton.classList.remove('d-none');
+          cancelButton.classList.remove('d-none');
+          break;
+        default: // 'normal'
+          titleElement.setAttribute('contenteditable', 'false');
+          videoCheckboxes.forEach(cb => cb.classList.add('d-none'));
+          editButton.classList.remove('d-none');
+          removeButton.classList.remove('d-none');
+          confirmButton.classList.add('d-none');
+          cancelButton.classList.add('d-none');
+          break;
+      }
+    }
+
+    editButton.addEventListener('click', function() {
+      changeContext('edit');
+    });
+
+    removeButton.addEventListener('click', function() {
+      changeContext('remove_from_playlist');
+    });
+
+    confirmButton.addEventListener('click', function() {
+      if (contextElement.getAttribute('data-context') === 'edit') {
+        titleInputElement.value = titleElement.innerText;
+        document.getElementById('edit-playlist-form').submit();
+      } else if (contextElement.getAttribute('data-context') === 'remove_from_playlist') {
+        const selectedVideoIds = Array.from(videoCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
+
+        selectedVideoIdsInput.value = selectedVideoIds.join(',');
+        removeForm.submit();
+      }
+    });
+
+    cancelButton.addEventListener('click', function() {
+      changeContext('normal');
+    });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        changeContext('normal');
+      } else if (event.key === 'Enter' && contextElement.getAttribute('data-context') === 'edit') {
+        confirmButton.click();
+      }
+    });
+  });
+</script>
