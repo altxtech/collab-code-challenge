@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Playlist items</h1>
+
+<div id="playlist_items">
+  <% @playlist_items.each do |playlist_item| %>
+    <%= render playlist_item %>
+    <p>
+      <%= link_to "Show this playlist item", playlist_item %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New playlist item", new_playlist_item_path %>

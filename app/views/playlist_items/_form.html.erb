@@ -1,0 +1,27 @@
+<%= form_with(model: playlist_item) do |form| %>
+  <% if playlist_item.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(playlist_item.errors.count, "error") %> prohibited this playlist_item from being saved:</h2>
+
+      <ul>
+        <% playlist_item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :playlist_id, style: "display: block" %>
+    <%= form.text_field :playlist_id %>
+  </div>
+
+  <div>
+    <%= form.label :video_id, style: "display: block" %>
+    <%= form.text_field :video_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
