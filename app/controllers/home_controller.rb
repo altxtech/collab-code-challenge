@@ -1,71 +1,31 @@
 class HomeController < ApplicationController
   def index
-    youtube_service = YoutubeApiService.new
+    video_service = VideoService.new
 
+    # Preprocessing --> make sure page is inteter
+    if params[:page].present?
+      params[:page] = params[:page].to_i
+    end
+
+    # Handle Search
     if params[:query].present?
-      @videos = []
-      page = 1
-
-      loop do
-        response = youtube_service.fetch_videos(page)
-
-        if response.success?
-          videos = response['videos']
-          @meta = response['meta']
-
-          # Filter videos by search query
-          filtered_videos = videos.select { |video| video['title'].downcase.include?(params[:query].downcase) }
-          @videos.concat(filtered_videos)
-
-          # Break the loop if there are no more pages to fetch
-          break if @meta['page'] >= (@meta['total'] / 10.0).ceil
-
-          # Increment the page counter to fetch the next set of videos
-          page += 1
-        else
-          flash[:alert] = "Failed to fetch videos"
-          break
-        end
+      @videos = video_service.get_videos_by_query(params[:query], page: params[:page] || 1)
+      @meta = { 'total' => @videos.total_count, 'page' => params[:page] || 1 }
+ 
+      if @videos.empty?
+        flash[:notice] = "No videos found matching your search criteria"
       end
-
-      # Set page to 1
-      page = 1
-
-      # Paginate the @videos array to show only videos for the current page
-      @videos = Kaminari.paginate_array(@videos).page(params[:page]).per(10)
-
-      # Flash a message if no videos match the search query
-      flash[:notice] = "No videos found matching your search criteria" if @videos.empty?
+    # Handle regular browsing
     else
-      # Normal pagination and fetching if no search query is provided
-      response = youtube_service.fetch_videos(params[:page])
-
-      if response.success?
-        @videos = response['videos']
-        @meta = response['meta']
-      else
-        @videos = []
+      @videos = video_service.list_videos(page: params[:page] || 1)
+      @meta = { 'total' => @videos.total_count, 'page' => params[:page] || 1 }
+ 
+      if @videos.empty?
         flash[:alert] = "Failed to fetch videos"
       end
     end
-  end
 
-  def show
-    youtube_service = YoutubeApiService.new
-    video_id = params[:id]
-
-    response = youtube_service.fetch_videos
-    if response.success?
-      videos = response['videos']
-      @video = videos.find { |v| v['id'].to_s == video_id }
-
-      unless @video
-        flash[:alert] = "Video not found"
-        redirect_to root_path
-      end
-    else
-      flash[:alert] = "Failed to fetch video details"
-      redirect_to root_path
-    end
+    # Postprocessing --> Make sure meta page is not nil (breaks view)
+    @meta['page'] ||= 1
   end
 end
