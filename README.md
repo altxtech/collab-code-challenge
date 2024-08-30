@@ -29,40 +29,49 @@ Rather than interacting directly with the API for every request, the application
 
 As this was my first experience with Ruby on Rails, this project also demonstrates my ability to quickly learn and adapt to new technologies. In a short amount of time, I was able to build a fully functional application with Rails, leveraging its features and best practices.
 
-## Installation
+## Deployment
 
-To run this application locally, follow these steps:
+One instance of this app was deployed on a Hetzner server.  
+You can visit it on: http://5.78.81.254:3000
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/collab-code-challenge.git
-   cd collab-code-challenge
-   ```
+## Launching
 
-2. **Install dependencies**:
+### Option 1: Docker Compose
+
+1. **Launch docker compose**
+```bash
+docker compose up
+```
+2. **Visit the application**:
+    Navigate to http://localhost:3000 to see the app.
+
+### Option 2: Manual install
+
+
+1. **Install dependencies**:
    ```bash
    bundle install
    yarn install
    ```
 
-3. **Set up the database**:
+2. **Set up the database**:
    ```bash
    rails db:create
    rails db:migrate
    ```
 
-4. **Extract and Store Video Data**:
-   Before running the server, you need to populate the database with video data from the mock YouTube API. Run the following command to execute the extraction job:
+3. **Extract and Store Video Data**:
+  Before running the server, you need to populate the database with video data from the mock YouTube API. Run the following command to execute the extraction job:
    ```bash
    rails runner "VideoDataExtractor.extract_and_upsert_videos"
    ```
 
-5. **Run the server**:
+4. **Run the server**:
    ```bash
    rails server
    ```
 
-6. **Visit the application**:
+5. **Visit the application**:
    Open your browser and navigate to `http://localhost:3000`.
 
 ## Usage
