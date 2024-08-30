@@ -1,16 +1,15 @@
-
 <% if @videos.any? %>
     <div class="container">
-    <div class="row">
+    <div class="row mt-5">
         <% @videos.each do |video| %>
             <div class="col-md-3 mb-4">
             <%= link_to video_path(video['id']), class: "text-decoration-none text-dark" do %>
-                <div class="card h-100">
-                <img src="<%= video['thumbnail_url'] %>" class="card-img-top" alt="<%= video['title'] %>">
-                <div class="card-body p-2">
-                    <h6 class="card-title"><%= video['title'] %></h6>
-                    <p class="card-text"><small class="text-muted">Views: <%= number_with_delimiter(video['views']) %></small></p>
-                </div>
+                <div class="card border-0">
+                    <img src="<%= video['thumbnail_url'] %>" class="card-img-top rounded" alt="<%= video['title'] %>">
+                    <div class="card-body p-2">
+                        <p class="mb-0"><strong><%= video['title'] %></strong></p>
+                        <p class="card-text"><small class="text-muted">Views: <%= number_with_delimiter(video['views']) %></small></p>
+                    </div>
                 </div>
             <% end %>
             </div>
