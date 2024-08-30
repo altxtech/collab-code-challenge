@@ -22,6 +22,9 @@ gem 'httparty'
 gem 'mutex_m'
 gem 'webrick'
 gem 'kaminari'
+gem 'sassc-rails'
+gem 'puma'
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
