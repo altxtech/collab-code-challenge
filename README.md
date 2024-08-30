@@ -1,7 +1,3 @@
-Given the additional context and the architectural choices you made, here’s an updated `README.md` that reflects the correct information about how the app works, including the use of the `VideoDataExtractor` to populate the database:
-
----
-
 # Collab Code Challenge
 
 ## Overview
