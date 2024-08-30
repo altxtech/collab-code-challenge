@@ -32,7 +32,9 @@ As this was my first experience with Ruby on Rails, this project also demonstrat
 ## Deployment
 
 One instance of this app was deployed on a Hetzner server.  
-You can visit it on: http://5.78.81.254:3000
+You can visit it on: http://5.78.81.254:3000  
+
+(I already use that server for other things. I'm not spending any money on this. Don't worry about it :D )
 
 ## Launching
 
@@ -51,7 +53,6 @@ docker compose up
 1. **Install dependencies**:
    ```bash
    bundle install
-   yarn install
    ```
 
 2. **Set up the database**:
